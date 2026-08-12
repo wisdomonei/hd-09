@@ -1,0 +1,1096 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>회원가입 | Member Portal</title>
+
+<style>
+:root{
+    --bg:#f5f7fb;
+    --card:#ffffff;
+    --text:#172033;
+    --muted:#697386;
+    --line:#dfe4ec;
+    --primary:#3157d5;
+    --primary2:#243f9e;
+    --danger:#c62828;
+    --success:#177245;
+    --shadow:0 20px 60px rgba(23,32,51,.10);
+}
+
+*{
+    box-sizing:border-box;
+}
+
+body{
+    margin:0;
+    background:linear-gradient(135deg,#f7f9fc,#eef2f8);
+    font-family:Arial,"Noto Sans KR",sans-serif;
+    color:var(--text);
+}
+
+.wrap{
+    min-height:100vh;
+    display:grid;
+    place-items:center;
+    padding:32px 16px;
+}
+
+.card{
+    width:min(760px,100%);
+    background:var(--card);
+    border:1px solid #e8ebf1;
+    border-radius:24px;
+    box-shadow:var(--shadow);
+    overflow:hidden;
+}
+
+.head{
+    padding:38px 42px 24px;
+    border-bottom:1px solid #edf0f5;
+}
+
+.brand{
+    font-size:13px;
+    font-weight:800;
+    letter-spacing:.14em;
+    color:var(--primary);
+    text-transform:uppercase;
+}
+
+.head h1{
+    margin:10px 0 8px;
+    font-size:30px;
+}
+
+.head p{
+    margin:0;
+    color:var(--muted);
+    line-height:1.6;
+}
+
+.body{
+    padding:32px 42px 40px;
+}
+
+.grid{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:20px;
+}
+
+.full{
+    grid-column:1/-1;
+}
+
+.field label{
+    display:block;
+    font-weight:700;
+    font-size:14px;
+    margin-bottom:8px;
+}
+
+.required{
+    color:var(--danger);
+}
+
+input{
+    width:100%;
+    height:48px;
+    border:1px solid var(--line);
+    border-radius:10px;
+    padding:0 14px;
+    font-size:15px;
+    outline:none;
+    transition:.2s;
+}
+
+input:focus{
+    border-color:var(--primary);
+    box-shadow:0 0 0 3px rgba(49,87,213,.10);
+}
+
+.help{
+    font-size:12px;
+    color:var(--muted);
+    margin-top:7px;
+    line-height:1.5;
+}
+
+.msg{
+    font-size:12px;
+    margin-top:7px;
+    min-height:16px;
+}
+
+.error{
+    color:var(--danger);
+}
+
+.ok{
+    color:var(--success);
+}
+
+.email-row{
+    display:grid;
+    grid-template-columns:1fr auto;
+    gap:8px;
+}
+
+.btn-small{
+    height:48px;
+    border:0;
+    border-radius:10px;
+    padding:0 15px;
+    background:#edf1ff;
+    color:var(--primary);
+    font-weight:800;
+    cursor:pointer;
+}
+
+.btn-small:hover{
+    background:#e0e7ff;
+}
+
+.pw-meter{
+    height:7px;
+    background:#edf0f5;
+    border-radius:10px;
+    overflow:hidden;
+    margin-top:9px;
+}
+
+.pw-bar{
+    height:100%;
+    width:0;
+    transition:.25s;
+}
+
+.pw-text{
+    font-size:12px;
+    color:var(--muted);
+    margin-top:6px;
+}
+
+.consent{
+    margin-top:25px;
+    border:1px solid var(--line);
+    border-radius:14px;
+    padding:18px;
+    background:#fafbfe;
+}
+
+.consent-title{
+    font-weight:800;
+    margin-bottom:12px;
+}
+
+.consent label{
+    display:flex;
+    gap:10px;
+    align-items:flex-start;
+    font-size:13px;
+    line-height:1.55;
+    margin:10px 0;
+}
+
+.consent input{
+    width:18px;
+    height:18px;
+    margin-top:1px;
+    accent-color:var(--primary);
+}
+
+button.submit{
+    width:100%;
+    height:54px;
+    border:0;
+    border-radius:12px;
+    margin-top:22px;
+    background:linear-gradient(
+        135deg,
+        var(--primary),
+        var(--primary2)
+    );
+    color:white;
+    font-size:16px;
+    font-weight:800;
+    cursor:pointer;
+}
+
+.submit:disabled{
+    opacity:.55;
+    cursor:not-allowed;
+}
+
+.notice{
+    display:none;
+    margin-bottom:20px;
+    padding:13px 15px;
+    border-radius:10px;
+    font-size:14px;
+}
+
+.notice.error{
+    background:#fff1f1;
+}
+
+.notice.success{
+    background:#effaf4;
+}
+
+.foot{
+    text-align:center;
+    color:var(--muted);
+    font-size:12px;
+    margin-top:16px;
+}
+
+@media(max-width:640px){
+
+    .head,
+    .body{
+        padding-left:22px;
+        padding-right:22px;
+    }
+
+    .grid{
+        grid-template-columns:1fr;
+    }
+
+    .full{
+        grid-column:auto;
+    }
+
+    .email-row{
+        grid-template-columns:1fr;
+    }
+
+    .head h1{
+        font-size:26px;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<div class="wrap">
+
+<main class="card">
+
+<section class="head">
+
+    <div class="brand">
+        Member Portal
+    </div>
+
+    <h1>
+        회원가입
+    </h1>
+
+    <p>
+        이메일 인증과 개인정보 동의를 완료하면
+        회원가입이 진행됩니다.
+    </p>
+
+</section>
+
+
+<section class="body">
+
+<div id="notice" class="notice"></div>
+
+
+<form id="signupForm" novalidate>
+
+<div class="grid">
+
+
+<!-- 이메일 -->
+
+<div class="field full">
+
+<label for="email">
+    이메일
+    <span class="required">*</span>
+</label>
+
+<div class="email-row">
+
+<input
+    id="email"
+    type="email"
+    autocomplete="email"
+    placeholder="example@company.com"
+    required
+>
+
+<button
+    type="button"
+    class="btn-small"
+    id="checkEmail"
+>
+    중복 확인
+</button>
+
+</div>
+
+<div class="help">
+    실제 사용 가능한 이메일을 입력하세요.
+    이메일 인증을 활성화하면 가입 후 실제 이메일 인증이 필요합니다.
+</div>
+
+<div
+    id="emailMsg"
+    class="msg"
+></div>
+
+</div>
+
+
+<!-- 비밀번호 -->
+
+<div class="field">
+
+<label for="password">
+    비밀번호
+    <span class="required">*</span>
+</label>
+
+<input
+    id="password"
+    type="password"
+    autocomplete="new-password"
+    placeholder="대문자 + 숫자 + 특수문자 포함"
+    required
+>
+
+<div class="pw-meter">
+
+<div
+    id="pwBar"
+    class="pw-bar"
+></div>
+
+</div>
+
+<div
+    id="pwText"
+    class="pw-text"
+>
+    중간 이상 난이도 필요
+</div>
+
+</div>
+
+
+<!-- 비밀번호 확인 -->
+
+<div class="field">
+
+<label for="password2">
+    비밀번호 확인
+    <span class="required">*</span>
+</label>
+
+<input
+    id="password2"
+    type="password"
+    autocomplete="new-password"
+    placeholder="비밀번호를 한 번 더 입력"
+    required
+>
+
+<div
+    id="pw2Msg"
+    class="msg"
+></div>
+
+</div>
+
+
+<!-- 이름 -->
+
+<div class="field">
+
+<label for="name">
+    이름
+    <span class="required">*</span>
+</label>
+
+<input
+    id="name"
+    type="text"
+    autocomplete="name"
+    maxlength="50"
+    placeholder="홍길동"
+    required
+>
+
+</div>
+
+
+<!-- 전화번호 -->
+
+<div class="field">
+
+<label for="phone">
+    전화번호
+    <span class="required">*</span>
+</label>
+
+<input
+    id="phone"
+    type="tel"
+    autocomplete="tel"
+    maxlength="20"
+    placeholder="010-1234-5678"
+    required
+>
+
+</div>
+
+</div>
+
+
+<!-- 개인정보 동의 -->
+
+<div class="consent">
+
+<div class="consent-title">
+
+    개인정보 수집·이용 동의
+    <span class="required">*</span>
+
+</div>
+
+
+<label>
+
+<input
+    type="checkbox"
+    id="privacy"
+    required
+>
+
+<span>
+
+필수:
+회원 식별 및 서비스 제공을 위해
+
+<b>
+이름, 전화번호, 이메일
+</b>
+
+을 수집·이용하는 것에 동의합니다.
+
+</span>
+
+</label>
+
+
+<label>
+
+<input
+    type="checkbox"
+    id="terms"
+    required
+>
+
+<span>
+
+필수:
+서비스 이용약관에 동의합니다.
+
+</span>
+
+</label>
+
+
+<div class="help">
+
+실제 서비스 운영 전에는
+개인정보처리방침 및 이용약관에
+수집 목적, 보관기간, 파기 등에 관한 내용을
+구체적으로 작성하세요.
+
+</div>
+
+</div>
+
+
+<button
+    class="submit"
+    id="submitBtn"
+    type="submit"
+>
+    회원가입
+</button>
+
+
+</form>
+
+
+<div class="foot">
+
+회원정보는 Supabase Auth 및
+profiles 테이블에 저장됩니다.
+
+</div>
+
+</section>
+
+</main>
+
+</div>
+
+
+<!-- Supabase JS -->
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+
+<script>
+
+/*
+====================================================
+Supabase 설정
+====================================================
+
+GitHub Actions를 사용할 경우
+deploy.yml에서 아래 placeholder를 자동으로
+실제 값으로 변경하도록 구성할 수 있습니다.
+
+절대로 service_role key를 넣지 마세요.
+====================================================
+*/
+
+const SUPABASE_URL =
+    "__SUPABASE_URL__";
+
+const SUPABASE_PUBLISHABLE_KEY =
+    "__SUPABASE_PUBLISHABLE_KEY__";
+
+
+const supabaseClient =
+    supabase.createClient(
+        SUPABASE_URL,
+        SUPABASE_PUBLISHABLE_KEY
+    );
+
+
+/*
+====================================================
+공통 함수
+====================================================
+*/
+
+const $ = id =>
+    document.getElementById(id);
+
+
+/*
+이메일 정규식
+*/
+
+const emailRegex =
+    /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/i;
+
+
+/*
+비밀번호 조건
+*/
+
+const passwordRules = {
+
+    upper:
+        /[A-Z]/,
+
+    number:
+        /\d/,
+
+    special:
+        /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>/?~`]/
+};
+
+
+/*
+메시지 표시
+*/
+
+function showNotice(
+    text,
+    type="error"
+){
+
+    const notice =
+        $("notice");
+
+    notice.textContent =
+        text;
+
+    notice.className =
+        "notice " + type;
+
+    notice.style.display =
+        "block";
+
+    window.scrollTo({
+        top:0,
+        behavior:"smooth"
+    });
+}
+
+
+/*
+비밀번호 점수
+*/
+
+function passwordScore(value){
+
+    let score = 0;
+
+    if(value.length >= 8)
+        score++;
+
+    if(passwordRules.upper.test(value))
+        score++;
+
+    if(passwordRules.number.test(value))
+        score++;
+
+    if(passwordRules.special.test(value))
+        score++;
+
+    return score;
+}
+
+
+/*
+비밀번호 최종 검증
+*/
+
+function validPassword(value){
+
+    return (
+
+        value.length >= 8 &&
+
+        passwordRules.upper.test(value) &&
+
+        passwordRules.number.test(value) &&
+
+        passwordRules.special.test(value)
+
+    );
+}
+
+
+/*
+====================================================
+비밀번호 난이도 표시
+====================================================
+*/
+
+$("password").addEventListener(
+    "input",
+    event => {
+
+        const value =
+            event.target.value;
+
+        const score =
+            passwordScore(value);
+
+        const percentage =
+            [0,25,50,75,100][score];
+
+        $("pwBar").style.width =
+            percentage + "%";
+
+
+        if(score < 4){
+
+            $("pwText").textContent =
+                "대문자 1개 + 숫자 1개 + 특수문자 1개 + 8자 이상 필요";
+
+        }
+        else{
+
+            $("pwText").textContent =
+                "사용 가능한 비밀번호입니다.";
+
+        }
+
+    }
+);
+
+
+/*
+====================================================
+비밀번호 확인
+====================================================
+*/
+
+$("password2").addEventListener(
+    "input",
+    () => {
+
+        const password =
+            $("password").value;
+
+        const password2 =
+            $("password2").value;
+
+
+        const matched =
+            password === password2 &&
+            password2.length > 0;
+
+
+        $("pw2Msg").textContent =
+            matched
+                ? "비밀번호가 일치합니다."
+                : "비밀번호가 일치하지 않습니다.";
+
+
+        $("pw2Msg").className =
+            "msg " +
+            (matched
+                ? "ok"
+                : "error");
+
+    }
+);
+
+
+/*
+====================================================
+이메일 확인
+====================================================
+
+브라우저에서 auth.users를 조회하지 않습니다.
+
+실제 중복 이메일 검증은
+Supabase Auth signUp() 단계에서 처리됩니다.
+====================================================
+*/
+
+$("checkEmail").addEventListener(
+    "click",
+    async () => {
+
+        const email =
+            $("email")
+            .value
+            .trim()
+            .toLowerCase();
+
+
+        if(!emailRegex.test(email)){
+
+            $("emailMsg").textContent =
+                "올바른 이메일 형식을 입력하세요.";
+
+            $("emailMsg").className =
+                "msg error";
+
+            return;
+        }
+
+
+        $("emailMsg").textContent =
+            "이메일 형식을 확인했습니다. 가입 시 Supabase에서 중복 여부를 검증합니다.";
+
+        $("emailMsg").className =
+            "msg ok";
+
+    }
+);
+
+
+/*
+====================================================
+회원가입
+====================================================
+*/
+
+$("signupForm").addEventListener(
+    "submit",
+    async event => {
+
+        event.preventDefault();
+
+
+        $("notice").style.display =
+            "none";
+
+
+        const email =
+            $("email")
+            .value
+            .trim()
+            .toLowerCase();
+
+
+        const password =
+            $("password").value;
+
+
+        const password2 =
+            $("password2").value;
+
+
+        const name =
+            $("name")
+            .value
+            .trim();
+
+
+        const phone =
+            $("phone")
+            .value
+            .trim();
+
+
+        /*
+        이메일
+        */
+
+        if(!emailRegex.test(email)){
+
+            showNotice(
+                "올바른 이메일 주소를 입력하세요."
+            );
+
+            return;
+        }
+
+
+        /*
+        비밀번호
+        */
+
+        if(!validPassword(password)){
+
+            showNotice(
+                "비밀번호는 8자 이상이며 대문자, 숫자, 특수문자를 각각 1개 이상 포함해야 합니다."
+            );
+
+            return;
+        }
+
+
+        /*
+        비밀번호 확인
+        */
+
+        if(password !== password2){
+
+            showNotice(
+                "비밀번호 확인이 일치하지 않습니다."
+            );
+
+            return;
+        }
+
+
+        /*
+        이름
+        */
+
+        if(!name){
+
+            showNotice(
+                "이름을 입력하세요."
+            );
+
+            return;
+        }
+
+
+        /*
+        전화번호
+        */
+
+        if(!phone){
+
+            showNotice(
+                "전화번호를 입력하세요."
+            );
+
+            return;
+        }
+
+
+        /*
+        개인정보 동의
+        */
+
+        if(
+            !$("privacy").checked ||
+            !$("terms").checked
+        ){
+
+            showNotice(
+                "필수 약관과 개인정보 수집·이용에 동의해야 가입할 수 있습니다."
+            );
+
+            return;
+        }
+
+
+        /*
+        버튼 잠금
+        */
+
+        $("submitBtn").disabled =
+            true;
+
+        $("submitBtn").textContent =
+            "가입 처리 중...";
+
+
+        try{
+
+            /*
+            Supabase Auth 회원가입
+            */
+
+            const {
+                data,
+                error
+            } =
+                await supabaseClient.auth.signUp({
+
+                    email:
+                        email,
+
+                    password:
+                        password,
+
+                    options:{
+
+                        data:{
+
+                            full_name:
+                                name,
+
+                            phone:
+                                phone
+
+                        }
+
+                    }
+
+                });
+
+
+            /*
+            오류 처리
+            */
+
+            if(error)
+                throw error;
+
+
+            if(!data.user)
+                throw new Error(
+                    "회원 생성 결과를 확인할 수 없습니다."
+                );
+
+
+            /*
+            profiles 테이블에는
+            SQL Trigger가 자동으로 저장합니다.
+            */
+
+
+            showNotice(
+                "회원가입이 완료되었습니다. 이메일 인증이 활성화되어 있다면 받은편지함에서 인증을 완료하세요.",
+                "success"
+            );
+
+
+            /*
+            폼 초기화
+            */
+
+            event.target.reset();
+
+
+            $("pwBar").style.width =
+                "0";
+
+
+            $("pwText").textContent =
+                "중간 이상 난이도 필요";
+
+
+        }
+        catch(error){
+
+            let message =
+                error?.message ||
+                "회원가입 중 오류가 발생했습니다.";
+
+
+            /*
+            중복 이메일
+            */
+
+            if(
+                /already registered|
+                 already exists|
+                 user already/i.test(
+                    message
+                )
+            ){
+
+                message =
+                    "이미 가입된 이메일입니다. 다른 이메일을 사용하세요.";
+
+            }
+
+
+            /*
+            이메일 발송 제한
+            */
+
+            if(
+                /rate limit/i.test(
+                    message
+                )
+            ){
+
+                message =
+                    "이메일 발송 제한에 도달했습니다. 잠시 후 다시 시도하거나 Supabase Auth 이메일 발송 설정을 확인하세요.";
+
+            }
+
+
+            showNotice(
+                message
+            );
+
+        }
+        finally{
+
+            $("submitBtn").disabled =
+                false;
+
+            $("submitBtn").textContent =
+                "회원가입";
+
+        }
+
+    }
+);
+
+</script>
+
+</body>
+</html>
